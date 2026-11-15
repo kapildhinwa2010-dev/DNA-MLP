@@ -12,7 +12,10 @@ from __future__ import annotations
 
 import numpy as np
 
-__all__ = ["encode", "decode", "GeneRecord", "codec_stats"]
+__all__ = [
+    "encode", "decode", "GeneRecord", "codec_stats",
+    "encode_state_dict", "decode_state_dict",
+]
 
 
 class GeneRecord:
@@ -80,3 +83,35 @@ def codec_stats(matrix: np.ndarray, bits: int = 8) -> dict:
         "max_abs_error": float(np.abs(matrix - decode(record)).max()),
         "bits": bits,
     }
+
+
+def encode_state_dict(state_dict: dict, bits: int = 8) -> dict:
+    """Encode an MLP state dict (2-D weights, 1-D biases) record-by-record.
+
+    Each tensor is encoded independently with its own scale: weight
+    matrices keep their 2-D shape, biases are encoded as (1, n) rows.
+    Returns a dict mapping parameter name to GeneRecord.
+    """
+    records = {}
+    for name, tensor in state_dict.items():
+        arr = np.asarray(tensor, dtype=np.float64)
+        if arr.ndim == 1:
+            arr = arr.reshape(1, -1)
+        if arr.ndim != 2:
+            raise ValueError("state_dict tensors must be 1-D or 2-D: " + name)
+        records[name] = encode(arr, bits=bits)
+    return records
+
+
+def decode_state_dict(records: dict) -> dict:
+    """Reconstruct a state dict from encode_state_dict output.
+
+    Biases encoded as (1, n) are returned flattened to (n,).
+    """
+    out = {}
+    for name, record in records.items():
+        arr = decode(record)
+        if arr.shape[0] == 1 and len(record.shape) == 2 and record.shape[0] == 1:
+            arr = arr.reshape(-1)
+        out[name] = arr
+    return out
