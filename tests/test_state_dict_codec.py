@@ -39,4 +39,4 @@ def test_state_dict_bias_flattened_back():
     sd = {"b": np.arange(5, dtype=np.float64)}
     out = decode_state_dict(encode_state_dict(sd, bits=16))
     assert out["b"].shape == (5,)
-    assert np.allclose(out["b"], sd["b"])
+    assert np.allclose(out["b"], sd["b"], atol=1e-4)  # 16-bit quantization tolerance
