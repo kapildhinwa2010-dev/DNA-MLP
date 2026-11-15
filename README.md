@@ -1,7 +1,8 @@
 # DNA-MLP
 
 [![CI](https://github.com/kapildhinwa2010-dev/DNA-MLP/actions/workflows/ci.yml/badge.svg)](https://github.com/kapildhinwa2010-dev/DNA-MLP/actions/workflows/ci.yml)
-[![CI](https://github.com/kapildhinwa2010-dev/DNA-MLP/actions/workflows/codeql.yml/badge.svg)](https://github.com/kapildhinwa2010-dev/DNA-MLP/actions/workflows/codeql.yml)
+[![CodeQL](https://github.com/kapildhinwa2010-dev/DNA-MLP/actions/workflows/codeql.yml/badge.svg)](https://github.com/kapildhinwa2010-dev/DNA-MLP/actions/workflows/codeql.yml)
+
 
 DNA quantized codec tuned for MLP weights: whole state-dict encode/decode.
 
